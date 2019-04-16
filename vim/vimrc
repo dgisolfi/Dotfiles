@@ -1,0 +1,16 @@
+set encoding=utf-8
+
+" SETTINGS
+set noswapfile
+set ruler
+set showcmd
+
+syntax on
+filetype plugin indent on
+
+" PACKAGES
+" pathogen package manager
+execute pathogen#infect()
+
+" enable nerd tree
+autocmd vimenter * NERDTree

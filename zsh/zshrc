@@ -1,0 +1,178 @@
+# If you come from bash you might have to change your $PATH.
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+# Path to your oh-my-zsh installation.
+export ZSH="/Users/daniel/.oh-my-zsh"
+
+# Set name of the theme to load. Optionally, if you set this to "random"
+# it'll load a random theme each time that oh-my-zsh is loaded.
+# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+ZSH_THEME=""
+
+# Set list of themes to load
+# Setting this variable when ZSH_THEME=random
+# cause zsh load theme from this variable instead of
+# looking in ~/.oh-my-zsh/themes/
+# An empty array have no effect
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+
+plugins=(
+  git
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+    export EDITOR='vim'
+else
+    export EDITOR='mvim'
+fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+#ssh
+export SSH_KEY_PATH="~/.ssh/rsa_id"
+
+
+# python
+export PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+#######
+#ALIAS#
+#######
+
+# Commands
+alias ls='ls -G'
+alias cls='clear'
+# Tools
+alias typora='open -a typora'
+alias penv='virtualenv venv'
+
+
+# VM's
+
+######################### Public #########################
+
+alias vm='personal'
+
+personal(){ ssh $1@138.68.140.175 }
+
+######################### Private ########################
+alias lcars='ssh lcars@10.11.17.26'
+alias lcars_node_1='ssh daniel@10.11.17.5'
+alias lcars_node_2='ssh daniel@10.11.17.6'
+alias qradar='ssh root@10.10.7.60'
+alias ddos='ssh ddosvm@10.11.17.30'
+alias legacy='ssh gstar@10.10.7.84'
+
+# honeypots
+alias thanatos='ssh -p 48500 daniel@10.11.17.23'
+alias pasithea='ssh -p 48500 honeypot@10.11.17.34'
+alias peitho='ssh -p 48500 honeypot@10.11.17.35'
+alias pacithea='ssh -p 48500 pacithea@10.11.17.37'
+alias coeus='ssh -p 48500 dan@10.11.17.38'
+
+
+# Copy a backup of the quotes db to the host
+quotes() {
+        scp $1@138.68.140.175:~/projects/bushmen-site/db/master.sql ~/git/data/bushmen/
+        mv ~/git/data/bushmen/master.sql ~/git/data/bushmen/$(date '+%F').sql
+}
+
+# Remove all docker images
+clean_images(){
+        docker rmi $(docker images | awk '{print $1}')
+        docker images
+}
+
+# Remove all docker containers
+clean_containers(){
+    docker kill $(docker ps -a | awk '{print $1}') &&
+    docker rm $(docker ps -a | awk '{print $1}')
+    docker ps -a
+}
+
+# Remove all docker images that are untagged
+clean_untag(){
+	docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
+}
+
+# Exec into a running docker container
+dockex(){
+    docker exec -it $1 bash
+}
+
+# SSH into ec2 instance for unix class
+ec2() {
+    ssh  -i  /Users/daniel/Dropbox/Marist/Junior/spring/Unix/dgisolfi.pem ubuntu@$1
+}
+
+#USE PURE THEME
+autoload -U promptinit; promptinit
+prompt pure
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
